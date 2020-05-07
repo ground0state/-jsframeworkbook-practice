@@ -1,0 +1,32 @@
+import { Component, OnInit, Input } from '@angular/core';
+
+import { MessageService } from '../services/message.service';
+
+@Component({
+  selector: 'app-message-form',
+  templateUrl: './message-form.component.html',
+  styleUrls: ['./message-form.component.css'],
+})
+export class MessageFormComponent implements OnInit {
+  // 親コンポーネントからこのコンポーネントを呼び出すときの属性になる
+  // 変数名"cname"と親コンポーネントの"[cname]"を一致させる
+  @Input() cname: string;
+
+  public message: string;
+
+  constructor(private messageService: MessageService) {}
+
+  ngOnInit() {}
+
+  sendMessage() {
+    if (this.message) {
+      this.messageService.post(this.cname, this.message).subscribe(
+        (_) => {
+          this.message = '';
+          this.messageService.notify();
+        },
+        (error) => console.log(error)
+      );
+    }
+  }
+}
